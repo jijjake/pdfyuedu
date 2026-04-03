@@ -33,7 +33,7 @@ jobs:
         run: |
           cd pdfyuedu
           echo "Installing dependencies..."
-          flutter pub get
+          flutter pub get --no-android
           echo "Dependencies installed successfully!"
       
       - name: Verify dependencies
