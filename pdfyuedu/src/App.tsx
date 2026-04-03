@@ -77,7 +77,7 @@ function App() {
       </header>
 
       {/* 主内容区域 */}
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">
         {renderPage()}
       </main>
 
