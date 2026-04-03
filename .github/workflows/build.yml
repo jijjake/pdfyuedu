@@ -29,25 +29,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-flutter-
       
-      - name: Install dependencies
-        run: |
-          cd pdfyuedu
-          echo "Installing dependencies..."
-          flutter pub get
-          echo "Dependencies installed successfully!"
-      
-      - name: Verify dependencies
-        run: |
-          cd pdfyuedu
-          echo "Verifying dependencies..."
-          flutter pub outdated
-      
       - name: Build Web
         run: |
           cd pdfyuedu
           echo "Building web version..."
           # Focus only on web build to avoid Android embedding issues
           flutter config --enable-web
+          # Build directly without separate pub get to avoid Android embedding issues
           flutter build web --web-renderer html --release --verbose
           echo "Web build completed!"
       

@@ -18,6 +18,15 @@ dependencies:
   uuid: ^4.0.0
   file_picker: ^6.0.0
 
+# Exclude device_info_plus for web build
+# This avoids Android embedding issues
+dependency_overrides:
+  device_info_plus:
+    git:
+      url: https://github.com/fluttercommunity/plus_plugins.git
+      path: packages/device_info_plus
+      ref: main
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
