@@ -1,4 +1,4 @@
-name: Build Flutter App
+name: Build and Deploy Flutter Web
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-android:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,41 +18,6 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
       
-      - name: Check pubspec.yaml
-        run: |
-          cd pdfyuedu
-          cat pubspec.yaml
-      - name: Install dependencies
-        run: |
-          cd pdfyuedu
-          flutter pub get
-      
-      - name: Build APK
-        run: |
-          cd pdfyuedu
-          flutter build apk --release
-      
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdfyuedu-apk
-          path: pdfyuedu/build/app/outputs/flutter-apk/app-release.apk
-  
-  build-web:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.19.0'
-          channel: 'stable'
-      
-      - name: Check pubspec.yaml
-        run: |
-          cd pdfyuedu
-          cat pubspec.yaml
       - name: Install dependencies
         run: |
           cd pdfyuedu
@@ -61,10 +26,12 @@ jobs:
       - name: Build Web
         run: |
           cd pdfyuedu
-          flutter build web
+          flutter build web --web-renderer html --release
       
-      - name: Upload Web
-        uses: actions/upload-artifact@v4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: pdfyuedu-web
-          path: pdfyuedu/build/web
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pdfyuedu/build/web
+          publish_branch: gh-pages
+
