@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import './App.css';
-import LibraryPage from './pages/LibraryPage';
-import ImportPage from './pages/ImportPage';
-import SearchPage from './pages/SearchPage';
-import SettingsPage from './pages/SettingsPage';
-import ReaderPage from './pages/ReaderPage';
 import type { Book } from './types';
+
+// 动态导入组件，实现代码分割
+const LibraryPage = lazy(() => import('./pages/LibraryPage'));
+const ImportPage = lazy(() => import('./pages/ImportPage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const ReaderPage = lazy(() => import('./pages/ReaderPage'));
 
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('library');
@@ -17,20 +19,16 @@ function App() {
   };
 
   const renderPage = () => {
-    switch (currentPage) {
-      case 'library':
-        return <LibraryPage onBookSelect={handleBookSelect} />;
-      case 'import':
-        return <ImportPage />;
-      case 'search':
-        return <SearchPage onBookSelect={handleBookSelect} />;
-      case 'settings':
-        return <SettingsPage />;
-      case 'reader':
-        return selectedBook ? <ReaderPage book={selectedBook} /> : <LibraryPage onBookSelect={handleBookSelect} />;
-      default:
-        return <LibraryPage onBookSelect={handleBookSelect} />;
-    }
+    return (
+      <Suspense fallback={<div className="flex justify-center items-center h-64">加载中...</div>}>
+        {currentPage === 'library' && <LibraryPage onBookSelect={handleBookSelect} />}
+        {currentPage === 'import' && <ImportPage />}
+        {currentPage === 'search' && <SearchPage onBookSelect={handleBookSelect} />}
+        {currentPage === 'settings' && <SettingsPage />}
+        {currentPage === 'reader' && selectedBook && <ReaderPage book={selectedBook} />}
+        {currentPage === 'reader' && !selectedBook && <LibraryPage onBookSelect={handleBookSelect} />}
+      </Suspense>
+    );
   };
 
   return (
