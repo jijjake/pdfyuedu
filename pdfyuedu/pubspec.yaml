@@ -25,3 +25,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # Only build for web platform
+  # This avoids Android embedding issues
+  # Remove this if you want to build for other platforms
+  # platform:
+  #   web:
+  #     enabled: true
+  #   android:
+  #     enabled: false
+  #   ios:
+  #     enabled: false

@@ -33,7 +33,7 @@ jobs:
         run: |
           cd pdfyuedu
           echo "Installing dependencies..."
-          flutter pub get --no-android
+          flutter pub get
           echo "Dependencies installed successfully!"
       
       - name: Verify dependencies
@@ -46,6 +46,8 @@ jobs:
         run: |
           cd pdfyuedu
           echo "Building web version..."
+          # Focus only on web build to avoid Android embedding issues
+          flutter config --enable-web
           flutter build web --web-renderer html --release --verbose
           echo "Web build completed!"
       
