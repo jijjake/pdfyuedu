@@ -19,16 +19,20 @@ jobs:
           channel: 'stable'
       
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          cd pdfyuedu
+          flutter pub get
       
       - name: Build APK
-        run: flutter build apk --release
+        run: |
+          cd pdfyuedu
+          flutter build apk --release
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: pdfyuedu-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: pdfyuedu/build/app/outputs/flutter-apk/app-release.apk
   
   build-web:
     runs-on: ubuntu-latest
@@ -42,13 +46,17 @@ jobs:
           channel: 'stable'
       
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          cd pdfyuedu
+          flutter pub get
       
       - name: Build Web
-        run: flutter build web
+        run: |
+          cd pdfyuedu
+          flutter build web
       
       - name: Upload Web
         uses: actions/upload-artifact@v4
         with:
           name: pdfyuedu-web
-          path: build/web
+          path: pdfyuedu/build/web
