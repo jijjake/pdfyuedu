@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
       
@@ -18,15 +19,41 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
       
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            pdfyuedu/.dart_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+      
       - name: Install dependencies
         run: |
           cd pdfyuedu
+          echo "Installing dependencies..."
           flutter pub get
+          echo "Dependencies installed successfully!"
+      
+      - name: Verify dependencies
+        run: |
+          cd pdfyuedu
+          echo "Verifying dependencies..."
+          flutter pub outdated
       
       - name: Build Web
         run: |
           cd pdfyuedu
-          flutter build web --web-renderer html --release
+          echo "Building web version..."
+          flutter build web --web-renderer html --release --verbose
+          echo "Web build completed!"
+      
+      - name: Check build output
+        run: |
+          cd pdfyuedu
+          echo "Checking build output..."
+          ls -la build/web/
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -34,4 +61,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./pdfyuedu/build/web
           publish_branch: gh-pages
+          force_orphan: true
+
 
