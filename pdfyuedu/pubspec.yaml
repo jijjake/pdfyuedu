@@ -15,7 +15,7 @@ dependencies:
   http: ^1.1.0
   pdfx: ^2.5.0
   epub: ^3.1.0
-  webdav_client: ^2.5.0
+  webdav_client: ^1.5.4
   flutter_secure_storage: ^9.0.0
   uuid: ^4.0.0
   file_picker: ^6.0.0
