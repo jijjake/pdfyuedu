@@ -1,0 +1,56 @@
+name: Build and Deploy Flutter Web
+
+on:
+  push:
+    branches: [ trae/solo-agent-4My6nm ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+      
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            pdfyuedu/.dart_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+      
+      - name: Build Web
+        run: |
+          cd pdfyuedu
+          echo "Building web version..."
+          # Focus only on web build to avoid Android embedding issues
+          flutter config --enable-web
+          # Build directly without separate pub get to avoid Android embedding issues
+          flutter build web --web-renderer html --release --verbose
+          echo "Web build completed!"
+      
+      - name: Check build output
+        run: |
+          cd pdfyuedu
+          echo "Checking build output..."
+          ls -la build/web/
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pdfyuedu/build/web
+          publish_branch: gh-pages
+          force_orphan: true
+
+
